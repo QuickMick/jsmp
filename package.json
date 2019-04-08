@@ -1,0 +1,28 @@
+{
+  "name": "jsmp",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "watch": "watchify main.js -o public/js/bundle.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/QuickMick/jsmp.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/QuickMick/jsmp/issues"
+  },
+  "homepage": "https://github.com/QuickMick/jsmp#readme",
+  "dependencies": {
+    "cannon": "^0.6.2",
+    "express": "^4.16.4",
+    "objectid": "^3.2.1",
+    "pino": "^5.12.2",
+    "socket.io": "^2.2.0",
+    "socket.io-client": "^2.2.0"
+  }
+}
