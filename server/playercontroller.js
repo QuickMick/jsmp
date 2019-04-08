@@ -28,6 +28,15 @@ class PlayerController extends Events {
     this.emit("connect", player);
   }
 
+  _initPlayerEvents(socket) {
+    socket.on("teeoff", (e) => {
+      this.emit
+    });
+  }
+  _teardownPlayerEvents() {
+
+  }
+
   onDisconnect(player) {
     delete this.players[player.id];
     this.emit("disconnect", {
