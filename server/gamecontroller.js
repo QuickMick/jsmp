@@ -10,10 +10,10 @@ setInterval(function () {
 class GameController {
   constructor(io) {
     this.game = new Game();
-    this.playerController = new PlayerController();
+    this.playerController = new PlayerController(io);
     // Add the WebSocket handlers
-    io.on('connection', this.playerController.onConnect.bind(this.playerController));
-    this.playerController.on("connect", (e) => this.game.addEntity(e.player));
+    this.playerController.on("connect", (e) => this.game.addEntity(e.player.body));
+    this.playerController.on("teeoff", (e) => this.game.teeOff(e));
   }
 
 }

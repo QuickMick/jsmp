@@ -3,17 +3,22 @@ const CANNON = require("cannon");
 
 const RADIUS = 10;
 
-class Player extends CANNON.Body {
+class Player {
   constructor(socket) {
-    super({
+    super()
+
+    this.socket = socket;
+    this.id = objectid();
+    this.name = objectid();
+
+    this.body = new CANNON.Body({
       mass: 5, // kg
       position: new CANNON.Vec3(0, 0, 10), // m
       shape: new CANNON.Sphere(RADIUS)
     });
 
-    this.socket = socket;
-    this.id = objectid();
-    this.name = objectid();
+    // connect the player to the entity
+    this.body.entity = this;
 
     /**
      * contains all listeners, that are registered for this socket

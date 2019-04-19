@@ -3,14 +3,18 @@ const Player = require("./player");
 
 
 class PlayerController extends Events {
-  constructor() {
+  constructor(io) {
     super();
+    this.io = io;
+
     /**
      * maps playerIds to players
      */
     this.players = {
       //id:playerobj
     };
+
+    this.io.on('connection', this.onConnect.bind(this));
   }
 
   onConnect(socket) {
@@ -18,7 +22,7 @@ class PlayerController extends Events {
     const player = new Player(socket);
     this.players[player.id] = player;
     // register the player events
-    socket.on("disconnect", this.onDisconnect.bind(this, player));
+    socket.on("disconnect", this._onDisconnect.bind(this, player));
     // emit the initial data
     socket.emit("init", {
       you: player.id,
@@ -28,20 +32,21 @@ class PlayerController extends Events {
     this.emit("connect", player);
   }
 
-  _initPlayerEvents(socket) {
-    socket.on("teeoff", (e) => {
-      this.emit
-    });
+  _initPlayerEvents(player) {
+    player.on("teeoff", e => this.emit("teeoff", {
+      player,
+      direction: e.direction,
+      modifier: e.modifier
+    }));
   }
-  _teardownPlayerEvents() {
 
-  }
-
-  onDisconnect(player) {
+  _onDisconnect(player) {
     delete this.players[player.id];
     this.emit("disconnect", {
       player
     });
+
+    player.tearDown();
   }
 }
 
