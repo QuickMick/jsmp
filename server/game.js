@@ -37,8 +37,9 @@ class Game {
     // Start the simulation loop
     let lastTime = Date.now();
     this.runIntervalID = setInterval(() => {
+      const time = Date.now();
       const delta = (time - lastTime) / 1000;
-      world.step(TICKS, delta, MAX_SUB_STEPS);
+      this.world.step(TICKS, delta, MAX_SUB_STEPS);
       lastTime = time;
     }, TICKS);
   }
@@ -53,11 +54,21 @@ class Game {
   /**
    * adds a entity-body to the game
    *
-   * @param {*} entity
+   * @param {Body} entity
    * @memberof Game
    */
   addEntity(entity) {
     this.world.addBody(entity);
+  }
+
+  /**
+   * removes an added entity
+   *
+   * @param {Body} entity
+   * @memberof Game
+   */
+  removeEntity(entity) {
+    this.world.remove(entity);
   }
 }
 

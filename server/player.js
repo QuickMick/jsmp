@@ -5,7 +5,6 @@ const RADIUS = 10;
 
 class Player {
   constructor(socket) {
-    super()
 
     this.socket = socket;
     this.id = objectid();

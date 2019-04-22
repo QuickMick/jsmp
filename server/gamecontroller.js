@@ -14,6 +14,9 @@ class GameController {
     // Add the WebSocket handlers
     this.playerController.on("connect", (e) => this.game.addEntity(e.player.body));
     this.playerController.on("teeoff", (e) => this.game.teeOff(e));
+    this.playerController.on("disconnect", (e) => this.game.removeEntity(e.player.body));
+
+    this.game.start();
   }
 
 }

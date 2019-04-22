@@ -29,7 +29,9 @@ class PlayerController extends Events {
       players: this.players
     });
 
-    this.emit("connect", player);
+    this.emit("connect", {
+      player
+    });
   }
 
   _initPlayerEvents(player) {
