@@ -1,5 +1,6 @@
 const THREE = require('three');
 const Entity = require('./entity');
+const Statics = require("./../common/statics");
 
 class Player extends Entity {
   constructor(data) {
@@ -8,8 +9,7 @@ class Player extends Entity {
   }
 
   init(context) {
-    const radius = 1;
-    const sphere_geometry = new THREE.SphereGeometry(radius, 8, 8);
+    const sphere_geometry = new THREE.SphereGeometry(Statics.PLAYER_RADIUS, 8, 8);
     this._mesh = new THREE.Mesh(
       sphere_geometry,
       new THREE.MeshLambertMaterial({

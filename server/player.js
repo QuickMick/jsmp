@@ -1,6 +1,7 @@
 const CANNON = require("cannon");
 const COM = require("./../common/com");
-const RADIUS = 10;
+const Statics = require("./../common/statics");
+
 
 /**
  * The player represents the dataset of a connected player.
@@ -24,8 +25,8 @@ class Player {
      */
     this.body = new CANNON.Body({
       mass: 5, // kg
-      position: new CANNON.Vec3(0, 0, 1), // m
-      shape: new CANNON.Sphere(RADIUS),
+      position: new CANNON.Vec3(1, 1, 10), // m
+      shape: new CANNON.Sphere(Statics.PLAYER_RADIUS),
       material: context.material.slippery,
     });
 
@@ -73,7 +74,6 @@ class Player {
   }
 
   getPosition() {
-    console.log(this.body.position);
     return this.body.position;
   }
 
@@ -83,6 +83,7 @@ class Player {
 
   teeOff(data) {
     if (!data.vector) return;
+    console.log("tee", data);
     this.body.velocity.x += data.vector.x || 0;
     this.body.velocity.y += data.vector.y || 0;
   }
