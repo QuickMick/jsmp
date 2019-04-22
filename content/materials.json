@@ -1,0 +1,35 @@
+{
+  "materials": [{
+      "name": "rough"
+    },
+    {
+      "name": "slippery"
+    },
+    {
+      "name": "player",
+      "friction": 0.000,
+      "restitution": 0.3
+    }
+  ],
+  "contacts": [{
+      "between": ["rough", "slippery"],
+      "behaviour": {
+        "friction": 0,
+        "restitution": 0,
+        "contactEquationStiffness": 1e8,
+        "contactEquationRelaxation": 3
+      }
+    },
+    {
+      "between": ["rough", "rough"],
+      "behaviour": {
+        "friction": 0.4,
+        "restitution": 0.3,
+        "contactEquationStiffness": 1e8,
+        "contactEquationRelaxation": 3,
+        "frictionEquationStiffness": 1e8,
+        "frictionEquationRegularizationTime": 3
+      }
+    }
+  ]
+}

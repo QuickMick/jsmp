@@ -1,24 +1,27 @@
 const PlayerController = require("./playercontroller");
 const Game = require("./game");
 
-/*
-setInterval(function () {
-  io.sockets.emit('message', 'hi!');
-}, 1000);*/
-
-
 class GameController {
   constructor(io) {
     this.game = new Game();
+
+    /**
+     * the context, shared with the game,
+     * the player-controller and the players
+     */
+    const context = {
+      material: null // initialized in the game
+    };
+
+    this.game.start(context);
+
     this.playerController = new PlayerController(io);
+    this.playerController.start(context);
     // Add the WebSocket handlers
-    this.playerController.on("connect", (e) => this.game.addEntity(e.player.body));
-    this.playerController.on("teeoff", (e) => this.game.teeOff(e));
-    this.playerController.on("disconnect", (e) => this.game.removeEntity(e.player.body));
+    this.playerController.on(PlayerController.CONNECT, (e) => this.game.addEntity(e.player.body));
+    this.playerController.on(PlayerController.TEEOFF, (e) => this.game.teeOff(e));
+    this.playerController.on(PlayerController.DISCONNECT, (e) => this.game.removeEntity(e.player.body));
 
-    this.game.start();
   }
-
 }
-
 module.exports = GameController;

@@ -1,0 +1,8 @@
+module.exports = {
+  MSG: {
+    INIT: "INIT",
+    TEEOFF: "TEEOFF",
+    CLIENT_CONNECTED: "CLIENT_CONNECTED",
+    CLIENT_DISCONNECTED: "CLIENT_DISCONNECTED"
+  }
+}

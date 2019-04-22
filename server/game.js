@@ -1,15 +1,52 @@
 const CANNON = require("cannon");
-
+const MATERIALS = require("./../content/materials.json");
 const TICKS = 1 / 30;
 const MAX_SUB_STEPS = 3;
+
+
+/**
+ * creates the materials and adds them to the world
+ *
+ * @param {World} world the physics world
+ * @param {Object} materials the materials object, containing all materials and conctacts
+ * @returns {Object} an object containing all materials
+ */
+function applyMaterials(world, materials) {
+  const result = {};
+  for (let mat of materials.materials) {
+    const k = Object.keys(mat).length;
+
+    result[mat.name] = new CANNON.Material(k > 1 ? mat : mat.name);
+  }
+
+  for (let m of materials.contacts) {
+    const contactMaterial = new CANNON.ContactMaterial(
+      result[m.between[0]],
+      result[m.between[1]],
+      m.behaviour
+    );
+    world.addContactMaterial(contactMaterial);
+  }
+  return result;
+}
+
 
 class Game {
   constructor() {
 
-    // contains the game physics engine
+    /**
+     * contains the game physics engine
+     */
     this.world = null;
 
-    // the id for the interval, that handles the game-logic
+    /**
+     * contains the materials after initialization
+     */
+    this.materials = null;
+
+    /**
+     * the id for the interval, that handles the game-logic
+     */
     this.runIntervalID = null;
   }
 
@@ -18,7 +55,7 @@ class Game {
    *
    * @memberof Game
    */
-  start() {
+  start(context) {
 
     // init the world
     this.world = new CANNON.World();
@@ -31,6 +68,11 @@ class Game {
     groundBody.addShape(new CANNON.Plane());
     this.world.addBody(groundBody);
 
+    /**
+     * Load the materials
+     */
+    this.materials = applyMaterials(this.world, MATERIALS);
+    context.material = this.materials;
     //TODO: load map
 
     console.log("running server");
@@ -42,6 +84,24 @@ class Game {
       this.world.step(TICKS, delta, MAX_SUB_STEPS);
       lastTime = time;
     }, TICKS);
+
+
+    /*
+        this.world.addEventListener("beginContact", (evt) => {
+          const a = evt.bodyA.entity.onBeginContact;
+          const b = evt.bodyB.entity.onBeginContact;
+          if (a) a.call(evt.bodyA.entity, context, evt.bodyB);
+          if (b) b.call(evt.bodyB.entity, context, evt.bodyA);
+        });
+
+        this.world.addEventListener("endContact", (evt) => {
+          const a = evt.bodyA.entity.onEndContact;
+          const b = evt.bodyB.entity.onEndContact;
+          if (a) a.call(evt.bodyA.entity, context, evt.bodyB);
+          if (b) b.call(evt.bodyB.entity, context, evt.bodyA);
+
+        });
+    */
   }
 
   /**
