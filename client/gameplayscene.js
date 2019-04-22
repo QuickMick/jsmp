@@ -58,14 +58,13 @@ class GameplayScene extends BaseScene {
       console.log(evt);
 
       for (let id in evt.players) {
-        const cur = evt.players[id];
-        const player = new Player(cur);
+        const data = evt.players[id];
+        // fill the references
+        const player = this.addPlayer(context, data);
         // find the player object and save it for easier access
         if (id == evt.you) {
           this.player = player;
         }
-        // fill the references
-        this.addPlayer(context, player);
       }
     });
 
@@ -91,15 +90,15 @@ class GameplayScene extends BaseScene {
       this.stage.add(map.mesh);
     });
 
-    setTimeout(() => {
-      this.socket.emit(COM.MSG.TEEOFF, {
-        vector: {
-          x: 1,
-          y: 1
-        }
-      });
+    /* setTimeout(() => {
+       this.socket.emit(COM.MSG.TEEOFF, {
+         vector: {
+           x: 1,
+           y: 1
+         }
+       });
 
-    }, 1000);
+     }, 1000);*/
   }
 
   updatePlayer(context, id, update) {
@@ -113,10 +112,23 @@ class GameplayScene extends BaseScene {
     }
   }
 
-  addPlayer(context, player) {
-    const id = player.id;
+  /**
+   * uses an incoming data event, to create a player
+   *
+   * @param {*} context
+   * @param {*} data
+   * @returns the created player
+   * @memberof GameplayScene
+   */
+  addPlayer(context, data) {
+    const id = data.id;
+    const player = new Player(data);
     this.players[id] = player;
     this.entityManager.addEntity(context, player);
+    const mesh = player.mesh;
+    mesh.position.set(data.position);
+    mesh.quaternion.set(data.quaternion);
+    return player;
   }
 
   removePlayer(context, id) {
