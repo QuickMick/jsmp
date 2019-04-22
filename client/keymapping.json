@@ -1,0 +1,26 @@
+{
+  "UP": {
+    "keyboard": [87],
+    "mouse": []
+  },
+  "DOWN": {
+    "keyboard": [83],
+    "mouse": []
+  },
+  "LEFT": {
+    "keyboard": [65],
+    "mouse": []
+  },
+  "RIGHT": {
+    "keyboard": [68],
+    "mouse": []
+  },
+  "JUMP": {
+    "keyboard": [32],
+    "mouse": []
+  },
+  "USE": {
+    "keyboard": [],
+    "mouse": [0]
+  }
+}

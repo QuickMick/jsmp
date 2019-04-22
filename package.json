@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "watch": "watchify main.js -o public/js/bundle.js"
+    "watch": "watchify main.js -o public/js/bundle.js -v -d"
   },
   "repository": {
     "type": "git",
@@ -26,6 +26,7 @@
     "sillyname": "^0.1.0",
     "socket.io": "^2.2.0",
     "socket.io-client": "^2.2.0",
+    "stats.js": "^0.17.0",
     "three.js": "^0.77.1"
   }
 }

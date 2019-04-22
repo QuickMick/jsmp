@@ -13,12 +13,14 @@ const COM = require("./../common/com");
  * @extends {Events}
  */
 class PlayerController extends Events {
-  constructor(io) {
+  constructor(io, game) {
     super();
+    this.game = game;
     this.io = io;
 
     /**
      * maps playerIds to players
+     * instance of Player
      */
     this.players = {
       //id:playerobj
@@ -34,6 +36,26 @@ class PlayerController extends Events {
     this.context = context;
 
     this.io.on('connection', this.onConnect.bind(this, context));
+  }
+
+  /**
+   * sends updates to the clients
+   *
+   * @memberof PlayerController
+   */
+  update(delta) {
+    // create possition update message
+    // it will look like { playerID : positionVector }
+    const result = {};
+    for (let id in this.players) {
+      const player = this.players[id];
+      result[id] = {
+        position: player.getPosition(),
+        quaternion: player.getQuaternion()
+      };
+    }
+    // send it to the server.
+    this._broadcast(COM.MSG.POSITION_UPDATE, result);
   }
 
   /**
@@ -72,7 +94,7 @@ class PlayerController extends Events {
     // register the player events
     socket.on("disconnect", this._onDisconnect.bind(this, player));
     // emit the initial data
-    this._sendToClient(socket, "init", {
+    this._sendToClient(socket, COM.MSG.INIT, {
       you: player.id,
       players: this.players
     });
@@ -85,6 +107,7 @@ class PlayerController extends Events {
       player
     });
 
+    this._sendToClient(socket, COM.MSG.CHANGE_MAP, this.game.getCurrentMap());
   }
 
   /**

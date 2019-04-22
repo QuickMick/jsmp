@@ -1,6 +1,6 @@
 const CANNON = require("cannon");
 const MATERIALS = require("./../content/materials.json");
-const TICKS = 1 / 30;
+const Statics = require("./../common/statics");
 const MAX_SUB_STEPS = 3;
 
 
@@ -66,6 +66,7 @@ class Game {
       mass: 0 // mass == 0 makes the body static
     });
     groundBody.addShape(new CANNON.Plane());
+    groundBody.position.z = 0;
     this.world.addBody(groundBody);
 
     /**
@@ -77,14 +78,6 @@ class Game {
 
     console.log("running server");
     // Start the simulation loop
-    let lastTime = Date.now();
-    this.runIntervalID = setInterval(() => {
-      const time = Date.now();
-      const delta = (time - lastTime) / 1000;
-      this.world.step(TICKS, delta, MAX_SUB_STEPS);
-      lastTime = time;
-    }, TICKS);
-
 
     /*
         this.world.addEventListener("beginContact", (evt) => {
@@ -102,6 +95,31 @@ class Game {
 
         });
     */
+  }
+
+
+  update(delta) {
+    this.world.step(Statics.TICKS, delta, MAX_SUB_STEPS);
+  }
+
+
+  getCurrentMap() {
+    return {
+      width: 10,
+      height: 10,
+      map: [
+        1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+        1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+        1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+        1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+        1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+        1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+        1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+        1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+        1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+        1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+      ]
+    };
   }
 
   /**

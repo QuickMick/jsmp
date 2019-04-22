@@ -1,5 +1,5 @@
 const CANNON = require("cannon");
-
+const COM = require("./../common/com");
 const RADIUS = 10;
 
 /**
@@ -24,7 +24,7 @@ class Player {
      */
     this.body = new CANNON.Body({
       mass: 5, // kg
-      position: new CANNON.Vec3(0, 0, 10), // m
+      position: new CANNON.Vec3(0, 0, 1), // m
       shape: new CANNON.Sphere(RADIUS),
       material: context.material.slippery,
     });
@@ -36,6 +36,8 @@ class Player {
      * contains all listeners, that are registered for this socket
      */
     this.socketListeners = [];
+
+    this.on(COM.MSG.TEEOFF, (data) => this.teeOff(data));
   }
 
   on(event, callback) {
@@ -61,11 +63,28 @@ class Player {
    * @memberof Player
    */
   toJSON() {
-    return JSON.stringify({
+    return {
       id: this.id,
       name: this.name,
-      color: this.color
-    });
+      color: this.color,
+      position: this.body.position,
+      quaternion: this.body.quaternion
+    };
+  }
+
+  getPosition() {
+    console.log(this.body.position);
+    return this.body.position;
+  }
+
+  getQuaternion() {
+    return this.body.quaternion;
+  }
+
+  teeOff(data) {
+    if (!data.vector) return;
+    this.body.velocity.x += data.vector.x || 0;
+    this.body.velocity.y += data.vector.y || 0;
   }
 }
 
