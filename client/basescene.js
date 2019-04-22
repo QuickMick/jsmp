@@ -11,7 +11,7 @@ class BaseScene {
 
     //The X axis is red. The Y axis is green. The Z axis is blue.
     const axisHelper = new THREE.AxisHelper(5);
-    this.stage.add(axisHelper);
+    //this.stage.add(axisHelper);
   }
 
   get camera() {

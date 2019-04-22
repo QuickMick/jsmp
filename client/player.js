@@ -27,6 +27,8 @@ class Player extends Entity {
   }
 
 
+
+
   update(context) {
 
   }
