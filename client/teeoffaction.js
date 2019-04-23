@@ -1,4 +1,5 @@
 const Action = require("./action");
+const Statics = require("./../common/statics");
 
 const mouseVector = new THREE.Vector2();
 class TeeOffAction extends Action {
@@ -39,6 +40,7 @@ class TeeOffAction extends Action {
 
     this.line = new THREE.Line(geometry, material);
     this.line.renderOrder = 10000; // this draws over everything
+
     this.raycaster = new THREE.Raycaster();
     super.init(context);
   }
@@ -72,12 +74,29 @@ class TeeOffAction extends Action {
     if (this.selectedElement) {
       this.start.x = this.selectedElement.position.x;
       this.start.y = this.selectedElement.position.y;
+      this.line.position.z = this.selectedElement.position.z + Statics.PLAYER_RADIUS;
     }
 
     this.end.x = context.inputManager.mouse.x * 10;
     this.end.y = context.inputManager.mouse.y * 10;
 
     this.line.geometry.verticesNeedUpdate = true;
+
+
+
+    var vec = new THREE.Vector3(); // create once and reuse
+    var pos = new THREE.Vector3(); // create once and reuse
+    vec.set(
+      (context.inputManager.mouse.x / window.innerWidth) * 2 - 1,
+      -(context.inputManager.mouse.y / window.innerHeight) * 2 + 1,
+      0.5);
+
+    vec.unproject(context.camera);
+    vec.sub(context.camera.position).normalize();
+    var distance = -context.camera.position.z / vec.z;
+    this.end.copy(context.camera.position).add(vec.multiplyScalar(distance));
+
+
 
     /*
      * check if action shall be executed
@@ -98,7 +117,6 @@ class TeeOffAction extends Action {
         }
       });
     }
-
   }
 }
 
