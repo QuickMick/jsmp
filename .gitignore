@@ -1,5 +1,7 @@
 *bundle.js
-
+*js/bundle.js
+*main.css
+*main.css.map
 # Logs
 logs
 *.log
