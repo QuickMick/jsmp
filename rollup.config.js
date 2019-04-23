@@ -30,7 +30,10 @@ export default {
     babel({
       babelrc: false,
       presets: [
-        'es2015-rollup'
+        'es2015-rollup',
+        ["env", {
+          modules: false
+        }]
       ]
     })
   ],
