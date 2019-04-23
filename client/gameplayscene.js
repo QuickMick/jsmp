@@ -7,13 +7,13 @@ const COM = require("./../common/com");
 const EntityManager = require('./entitymanager');
 const MATERIAL = require('./../content/materials.json');
 const Map = require("./map");
-const Player = require("./player");
+const Player = require("./playerentity");
+const KEY_MAPPING = require('./keymapping.json');
 
 const OrbitControls = require('three-orbit-controls')(THREE);
 
+const TeeOffAction = require("./teeoffaction");
 
-const mouseVector = new THREE.Vector2();
-let INTERSECTED;
 class GameplayScene extends BaseScene {
   constructor(socket) {
     super();
@@ -41,21 +41,19 @@ class GameplayScene extends BaseScene {
      */
     this.map = null;
 
-    /**
-     * mouse intersection handler
-     */
-    this.raycaster = new THREE.Raycaster();
-
 
     /**
      * the handling of the camera
      */
     this.cameraControls = null;
+
+
+    this.teeOffAction = null;
   }
 
   init(context) {
     this.entityManager.init(context);
-
+    context.inputManager.loadMapping(KEY_MAPPING);
     this._camera = new THREE.PerspectiveCamera(75, context.width / context.height, 0.1, 1000);
     this._camera.position.z = 10;
 
@@ -108,15 +106,16 @@ class GameplayScene extends BaseScene {
       this.stage.add(map.mesh);
     });
 
-    /* setTimeout(() => {
-       this.socket.emit(COM.MSG.TEEOFF, {
-         vector: {
-           x: 1,
-           y: 1
-         }
-       });
+    this.teeOffAction = new TeeOffAction(this.stage);
 
-     }, 1000);*/
+    this.teeOffAction.on(TeeOffAction.TEEOFF,
+      e => this.socket.emit(COM.MSG.TEEOFF, e)
+    );
+
+  }
+
+  resume(context) {
+    this.teeOffAction.init(context);
   }
 
   updatePlayer(context, id, update) {
@@ -158,32 +157,13 @@ class GameplayScene extends BaseScene {
   update(context) {
     this.entityManager.update(context);
 
-    console.log(INTERSECTED);
-
-    this.cameraControls.enabled = !INTERSECTED;
-
-    mouseVector.x = context.inputManager.mouse.x;
-    mouseVector.y = context.inputManager.mouse.y;
-    console.log(mouseVector);
-    this.raycaster.setFromCamera(mouseVector, this._camera);
-    var intersects = this.raycaster.intersectObjects(this.stage.children);
+    this.cameraControls.enabled = !this.teeOffAction.isBusy;
 
 
-    if (intersects.length > 0) {
-      if (INTERSECTED != intersects[0].object) {
-        if (INTERSECTED) {
-          INTERSECTED.material.emissive.setHex(INTERSECTED.currentHex);
-        }
-        INTERSECTED = intersects[0].object;
-        INTERSECTED.currentHex = INTERSECTED.material.emissive.getHex();
-        INTERSECTED.material.emissive.setHex(0xff0000);
-      }
-    } else {
-      if (INTERSECTED) {
-        INTERSECTED.material.emissive.setHex(INTERSECTED.currentHex);
-      }
-      INTERSECTED = null;
+    if (this.teeOffAction.isInitialized) {
+      this.teeOffAction.update(context);
     }
+
   }
 
   render(context) {

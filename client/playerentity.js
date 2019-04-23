@@ -1,6 +1,6 @@
 const THREE = require('three');
 const Entity = require('./entity');
-const Statics = require("./../common/statics");
+const Statics = require("../common/statics");
 
 class Player extends Entity {
   constructor(data) {
@@ -16,6 +16,8 @@ class Player extends Entity {
         color: 0x00ff00
       })
     );
+
+    this._mesh.player = this;
 
     this._mesh.position.set(0, 0, 0.1);
 

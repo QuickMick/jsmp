@@ -109,7 +109,7 @@ class ClientGame {
    * @memberof Game
    */
   update(context) {
-    if (!this.currentScene || !this.currentScene.initialized) return;
+    if (!this.currentScene || !this.currentScene.isInitialized) return;
     this.currentScene.update(context);
     this.context.inputManager.endCycle();
   }
@@ -121,7 +121,7 @@ class ClientGame {
    * @memberof Game
    */
   render(context) {
-    if (!this.currentScene || !this.currentScene.initialized) return;
+    if (!this.currentScene || !this.currentScene.isInitialized) return;
     this.currentScene.render(context);
     const camera = this.context.camera;
     if (!camera) return console.error("no cam");
@@ -166,9 +166,12 @@ class ClientGame {
         this.currentScene.tearDown(context);
       }
       // then start the new scene
-      scene.init(context);
-      scene.resume(context);
+      if (!scene.isInitialized) {
+        scene.init(context);
+      }
+
       this.currentScene = scene;
+      scene.resume(context);
     }
   }
 

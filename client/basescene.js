@@ -3,7 +3,7 @@ const THREE = require('three');
 
 class BaseScene {
   constructor() {
-    this.initialized = false;
+    this.isInitialized = false;
     this._camera = null;
 
     this.stage = new THREE.Scene();
@@ -19,7 +19,7 @@ class BaseScene {
   }
 
   init(context) {
-    this.initialized = true;
+    this.isInitialized = true;
   }
 
   resume(context) {
