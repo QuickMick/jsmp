@@ -6,12 +6,9 @@
 	}
 </script>
 
-<button on:click={handleClick}>
+<button class="b" on:click={handleClick}>
 	Clicked {count} {count === 1 ? 'time' : 'times'}
 </button>
 
 <style>
-  button {
-    text-align: center;
-  }
 </style>

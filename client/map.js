@@ -1,3 +1,4 @@
+const THREE = require('three');
 const Statics = require("./../common/statics");
 
 class Map {

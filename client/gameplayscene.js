@@ -9,7 +9,7 @@ const MATERIAL = require('./../content/materials.json');
 const Map = require("./map");
 const Player = require("./playerentity");
 const KEY_MAPPING = require('./keymapping.json');
-
+const THREE = require('three');
 const OrbitControls = require('three-orbit-controls')(THREE);
 
 const TeeOffAction = require("./teeoffaction");

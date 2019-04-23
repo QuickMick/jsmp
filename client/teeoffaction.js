@@ -1,7 +1,9 @@
+const THREE = require('three');
 const Action = require("./action");
 const Statics = require("./../common/statics");
 
 const mouseVector = new THREE.Vector2();
+
 class TeeOffAction extends Action {
   constructor(stage, player) {
     super();
