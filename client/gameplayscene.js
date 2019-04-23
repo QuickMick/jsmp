@@ -58,8 +58,9 @@ class GameplayScene extends BaseScene {
     this._camera.position.z = 10;
 
     this.cameraControls = new OrbitControls(this._camera);
-    //   this.cameraControls.update();
+
     /*
+
         this.cameraControls.enableDamping = true
         this.cameraControls.dampingFactor = 0.25
         this.cameraControls.enableZoom = false*/
@@ -71,6 +72,7 @@ class GameplayScene extends BaseScene {
 
     this.stage.add(pointLight);
     super.init(context);
+
 
     this.socket.on(COM.MSG.INIT, (evt) => {
       for (let id in evt.players) {
@@ -156,14 +158,12 @@ class GameplayScene extends BaseScene {
 
   update(context) {
     this.entityManager.update(context);
-
-    this.cameraControls.enabled = !this.teeOffAction.isBusy;
-
+    if (this.cameraControls)
+      this.cameraControls.enabled = !this.teeOffAction.isBusy;
 
     if (this.teeOffAction.isInitialized) {
       this.teeOffAction.update(context);
     }
-
   }
 
   render(context) {

@@ -42,10 +42,11 @@ class ClientGame {
   }
 
 
-  start() {
+  start(target) {
     this.renderer = new THREE.WebGLRenderer({
       antialias: true
     });
+    this.renderer.setPixelRatio(window.devicePixelRatio);
     this.renderer.setClearColor(0x000000, 0);
     this.renderer.domElement.classList = "scene";
     this.context.inputManager = new InputManager(this.renderer.domElement);
@@ -54,12 +55,12 @@ class ClientGame {
       e.preventDefault();
     };
     // add it to the document
-    document.body.appendChild(this.renderer.domElement);
+    target.appendChild(this.renderer.domElement);
 
     // add the resize listene and call it,
     // so that the screen is initially sized correctly
-    this.resize();
-    window.addEventListener('resize', this.resize.bind(this), false);
+    this.resize(target);
+    window.addEventListener('resize', this.resize.bind(this, target), false);
 
     // add debug stats
     let stats = null;
@@ -136,10 +137,10 @@ class ClientGame {
    * @param {Number} height of the canvas
    * @memberof Game
    */
-  resize(evt, width, height) {
-
-    const w = (width || window.innerWidth - OFFSET);
-    const h = (height || window.innerHeight - OFFSET);
+  resize(target, evt) {
+    const size = target.getBoundingClientRect();
+    const w = size.width;
+    const h = size.height;
     this.context.width = w;
     this.context.height = h;
 

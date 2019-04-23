@@ -12,6 +12,7 @@ const MOUSEWHEEL = "mousewheel";
 class InputManager extends Events {
   constructor(targetCanvas) {
     super();
+    this.targetCanvas = targetCanvas;
 
     // contains every keys, which are pressed since the last update cycle
     this.keyState = {
@@ -31,11 +32,11 @@ class InputManager extends Events {
 
     this.mapping = null;
 
-    this._init(targetCanvas);
+    this._init();
   }
 
 
-  _init(targetCanvas) {
+  _init() {
     //add key listeners
     // TODO: nichtmehr auf window lassen
     document.addEventListener("keydown", this._keyDown.bind(this), false);
@@ -48,8 +49,8 @@ class InputManager extends Events {
     document.addEventListener("touchend", this._mouseUp.bind(this), false);
 
     // mouse move
-    targetCanvas.addEventListener('mousemove', this._onMouseMove.bind(this), false);
-    targetCanvas.addEventListener('touchmove', this._onMouseMove.bind(this), false);
+    this.targetCanvas.addEventListener('mousemove', this._onMouseMove.bind(this), false);
+    this.targetCanvas.addEventListener('touchmove', this._onMouseMove.bind(this), false);
   }
 
   /**
@@ -175,8 +176,9 @@ class InputManager extends Events {
     this.mouse.lastX = this.mouse.x;
     this.mouse.lastY = this.mouse.y;
 
-    this.mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-    this.mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+    const size = this.targetCanvas.getBoundingClientRect();
+    this.mouse.x = (event.clientX / size.width) * 2 - 1;
+    this.mouse.y = -(event.clientY / size.height) * 2 + 1;
 
     // set the delta mouse movement
     this.mouse.dx = this.mouse.x - this.mouse.lastX;

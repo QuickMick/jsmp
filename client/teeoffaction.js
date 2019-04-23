@@ -2,7 +2,9 @@ const THREE = require('three');
 const Action = require("./action");
 const Statics = require("./../common/statics");
 
+
 const mouseVector = new THREE.Vector2();
+const vec = new THREE.Vector3(); // create once and reuse
 
 class TeeOffAction extends Action {
   constructor(stage, player) {
@@ -51,6 +53,7 @@ class TeeOffAction extends Action {
     mouseVector.x = context.inputManager.mouse.x;
     mouseVector.y = context.inputManager.mouse.y;
 
+
     this.raycaster.setFromCamera(mouseVector, context.camera);
     var intersects = this.raycaster.intersectObjects(this.stage.children);
 
@@ -76,30 +79,39 @@ class TeeOffAction extends Action {
     if (this.selectedElement) {
       this.start.x = this.selectedElement.position.x;
       this.start.y = this.selectedElement.position.y;
-      this.line.position.z = this.selectedElement.position.z + Statics.PLAYER_RADIUS;
+      this.line.position.z = this.selectedElement.position.z + Statics.PLAYER_RADIUS / 2;
     }
 
-    this.end.x = context.inputManager.mouse.x * 10;
-    this.end.y = context.inputManager.mouse.y * 10;
+    // this.end.x = context.inputManager.mouse.x;
+    // this.end.y = context.inputManager.mouse.y;
 
+    /*
+        vec.set(
+          context.inputManager.mouse.x,
+          context.inputManager.mouse.y,
+          0.5);
+
+        vec.unproject(context.camera);
+        vec.sub(context.camera.position).normalize();
+        var distance = (0.5 - context.camera.position.z) / vec.z; //-context.camera.position.z / vec.z;
+        this.end.copy(context.camera.position).add(vec.multiplyScalar(distance));
+
+    */
+
+    var planeZ = new THREE.Plane(new THREE.Vector3(0, 0, 1), 0);
+    var pos = this.raycaster.ray.intersectPlane(planeZ);
+    console.log("x: " + pos.x + ", y: " + pos.y + " z: " + pos.z);
+
+    this.end.copy(pos);
+
+    this.end.z = 0;
+    this.start.z = 0;
+    this.line.position.z = 0;
+    this.line.position.x = 0;
+    this.line.position.y = 0;
+
+    //  MP.Compute(context.inputManager.mouse.x, context.inputManager.mouse.y, context.camera, this.end);
     this.line.geometry.verticesNeedUpdate = true;
-
-
-
-    var vec = new THREE.Vector3(); // create once and reuse
-    var pos = new THREE.Vector3(); // create once and reuse
-    vec.set(
-      (context.inputManager.mouse.x / window.innerWidth) * 2 - 1,
-      -(context.inputManager.mouse.y / window.innerHeight) * 2 + 1,
-      0.5);
-
-    vec.unproject(context.camera);
-    vec.sub(context.camera.position).normalize();
-    var distance = -context.camera.position.z / vec.z;
-    this.end.copy(context.camera.position).add(vec.multiplyScalar(distance));
-
-
-
     /*
      * check if action shall be executed
      */

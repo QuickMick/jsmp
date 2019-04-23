@@ -9,7 +9,7 @@ class Player extends Entity {
   }
 
   init(context) {
-    const sphere_geometry = new THREE.SphereGeometry(Statics.PLAYER_RADIUS, 8, 8);
+    const sphere_geometry = new THREE.SphereGeometry(Statics.PLAYER_RADIUS, 16, 16);
     this._mesh = new THREE.Mesh(
       sphere_geometry,
       new THREE.MeshLambertMaterial({
