@@ -7,7 +7,7 @@
 </script>
 
 <button class="b" on:click={handleClick}>
-	Clicked {count} {count === 1 ? 'time' : 'times'}
+	Clicked test {count} {count === 1 ? 'time' : 'times'}
 </button>
 
 <style>
